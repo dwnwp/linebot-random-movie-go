@@ -1,6 +1,6 @@
 # LINE BOT
 เกี่ยวกับการสุ่มหนังให้ผู้ใช้โดยแบ่งหมวดหมู่เป็น สุ่มรวมหนัง, สุ่มหนังรัก และ สุ่มหนังตลก โดยจะดึงข้อมูลหนังที่สุ่มมาจาก <br />
-The Movie Database API https://developer.themoviedb.org/v4/reference/intro/getting-started <br /> <br />
+The Movie Database API https://developer.themoviedb.org/v4/reference/intro/getting-started พิมพ์ 'เริ่มต้น' ในแชทเพื่อเริ่มทำงาน <br /> <br />
 ## การตั้งค่า Environment Variable <br /> <br />
 Unix/Linux
 ``` cmd
