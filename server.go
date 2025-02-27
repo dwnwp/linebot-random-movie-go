@@ -75,6 +75,12 @@ func (app *App) HandleEvents(c *gin.Context) {
 												Text:  "สุ่มหนังตลก",
 											},
 										},
+										{
+											Action: &messaging_api.MessageAction{
+												Label: "สุ่มหนังผี",
+												Text:  "สุ่มหนังผี",
+											},
+										},
 									},
 								},
 							},
@@ -105,20 +111,36 @@ func (app *App) sendMovieTemplate(replyToken string, randomMovie Movie) error {
 			ReplyToken: replyToken,
 			Messages: []messaging_api.MessageInterface{
 				&messaging_api.TemplateMessage{
-					AltText: "Send movie",
-					Template: &messaging_api.ImageCarouselTemplate{
-						Columns: []messaging_api.ImageCarouselColumn{
+					AltText: "ส่งหนังให้คุณ",
+					Template: &messaging_api.CarouselTemplate{
+						Columns: []messaging_api.CarouselColumn{
 							{
-								ImageUrl: imageURL,
-								Action: &messaging_api.MessageAction{
-									Text: randomMovie.Title,
+								ThumbnailImageUrl: imageURL,
+								Title: randomMovie.Title,
+								Text: "  ",
+								Actions: []messaging_api.ActionInterface{
+									&messaging_api.MessageAction{
+										Label: "เรื่องย่อ",
+										Text:  "ขอเรื่องย่อหน่อย",
+									},
+								},
+							},
+							{
+								ThumbnailImageUrl: imageURL,
+								Title: randomMovie.Title,
+								Text: "  ",
+								Actions: []messaging_api.ActionInterface{
+									&messaging_api.MessageAction{
+										Label: "เรื่องย่อ",
+										Text:  "ขอเรื่องย่อหน่อย",
+									},
 								},
 							},
 						},
 					},
 				},
 				&messaging_api.TextMessage{
-					Text: "เรื่อง: " + randomMovie.Title,
+					Text: "หวังว่าคุณจะชอบนะ",
 					QuickReply: &messaging_api.QuickReply{
 						Items: []messaging_api.QuickReplyItem{
 							{
@@ -129,8 +151,20 @@ func (app *App) sendMovieTemplate(replyToken string, randomMovie Movie) error {
 							},
 							{
 								Action: &messaging_api.MessageAction{
-									Label: "รายละเอียดหนัง",
-									Text:  "รายละเอียดหนัง",
+									Label: "สุ่มหนังรัก",
+									Text:  "สุ่มหนังรัก",
+								},
+							},
+							{
+								Action: &messaging_api.MessageAction{
+									Label: "สุ่มหนังตลก",
+									Text:  "สุ่มหนังตลก",
+								},
+							},
+							{
+								Action: &messaging_api.MessageAction{
+									Label: "สุ่มหนังผี",
+									Text:  "สุ่มหนังผี",
 								},
 							},
 						},
@@ -155,7 +189,9 @@ func (app *App) handleText(message *webhook.TextMessageContent, replyToken strin
 		genre = "romance"
 	case "สุ่มหนังตลก":
 		genre = "comedy"
-	case "รายละเอียดหนัง":
+	case "สุ่มหนังผี":
+		genre = "horror"
+	case "ขอเรื่องย่อหน่อย":
 		if lastMovie.Title == "" {
 			responseText = "ยังไม่มีหนังที่สุ่มมา"
 		} else {
@@ -208,6 +244,12 @@ func (app *App) handleText(message *webhook.TextMessageContent, replyToken strin
 										Text:  "สุ่มหนังตลก",
 									},
 								},
+								{
+									Action: &messaging_api.MessageAction{
+										Label: "สุ่มหนังผี",
+										Text:  "สุ่มหนังผี",
+									},
+								},
 							},
 						},
 					},
@@ -239,6 +281,8 @@ func (app *App) fetchRandomMovie(genre string) (Movie, error) {
 		url = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&with_genres=10749&language=th-TH"
 	case "comedy": // หนังตลก
 		url = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&with_genres=35&language=th-TH"
+	case "horror": // หนังผี
+		url = "https://api.themoviedb.org/3/discover/movie?api_key=" + apiKey + "&with_genres=27&language=th-TH"
 	case "all": // ทั้งหมด (popular)
 		url = "https://api.themoviedb.org/3/movie/popular?api_key=" + apiKey + "&language=th-TH"
 	default:
